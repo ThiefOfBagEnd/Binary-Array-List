@@ -178,7 +178,17 @@ public:
 
 	}
 
-	void pop_back(const value_type& val)
+	void push_front(const value_type& val)
+	{
+
+	}
+
+	void pop_back()
+	{
+
+	}
+
+	void pop_front()
 	{
 
 	}
@@ -219,13 +229,78 @@ public:
 
 	}
 
+	void splice(iterator position, BinaryVectorList& x)
+	{
+
+	}
+
+	void splice(iterator position, BinaryVectorList& x, iterator i)
+	{
+		
+	}
+
+	void splice(iterator position, BinaryVectorList& x, iterator first, iterator last)
+	{
+
+	}
+
+	void remove(const value_type& val)
+	{
+
+	}
+
+	template <typename Predicate>
+	void remove_if(Predicate pred)
+	{
+
+	}
+
+	void unique()
+	{
+
+	}
+
+	template <typename BinaryPredicate>
+	void unique(BinaryPredicate binary_pred)
+	{
+
+	}
+
+	void merge(BinaryVectorList& x)
+	{
+
+	}
+
+	template <typename Compare>
+	void merge(BinaryVectorList&x, Compare comp)
+	{
+
+	}
+
+	void sort()
+	{
+
+	}
+
+	template <typename Compare>
+	void sort(Compare comp)
+	{
+
+	}
+
+	void reverse()
+	{
+
+	}
+
+
 	//TODO:Relational Operators
 	//TODO:swap two BinaryVectorLists
 	//TODO:Decide whether to support emplace
+	//After a little reading, emplace will not be too dificult to implement
 	//Not Supported data()- memory is not stored in consecutive addresses so it cannot be returned
 	//TODO:Decide whether to support data(int) for part of the memory addresses
 	//TODO:Decide whether to support the allocator template argument-leaning toward not supporting
-	//TODO:Add STL list function prototypes
 
 protected:
 	std::vector<std::vector<value_type> > vectorList;
