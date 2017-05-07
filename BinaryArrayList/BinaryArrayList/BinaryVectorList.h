@@ -21,61 +21,65 @@ template<typename value_type, typename allocator_type = std::allocator<value_typ
 class BinaryVectorList
 {
 public:
+	void functionhere()
+	{
+		return;
+	}
 	//typedefs
 
 	/**
 	* \brief A reference to value_type
 	*/
-	typedef reference value_type&;
+	typedef value_type& reference;
 
 	/**
 	* \brief A const reference to value_type
 	*/
-	typedef const_reference const value_type&;
+	typedef const reference const_reference;
 
 	/**
 	* \brief A pointer to value_type given by allocator (usually value_type*)
 	*/
-	typedef pointer std::allocator_traits<allocator_type>::pointer;
+	typedef std::allocator_traits<allocator_type>::pointer pointer;
 
 	/**
 	* \brief A const pointer to value_type given by allocator (usually const value_type*)
 	*/
-	typedef const_pointer std::allocator_traits<allocator_type>::const_pointer;
+	typedef std::allocator_traits<allocator_type>::const_pointer const_pointer;
 
 	/**
 	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList.
 	* Not sure what type we need here yet. Probably std::vector::iterator, but until implementation is concluded we won't know.
 	*/
-	typedef iterator std::vector<value_type>::iterator;
+	typedef std::vector<value_type>::iterator iterator;
 
 	/**
 	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList, but not change the elements.
 	* Not sure what type we need here yet. Probably std::vector::const_iterator, but until implementation is concluded we won't know.
 	*/
-	typedef const_iterator std::vector<value_type>::const_iterator;
+	typedef std::vector<value_type>::const_iterator const_iterator;
 
 	/**
 	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order.
 	* A reverse iterator based on iterator.
 	*/
-	typedef reverse_iterator std::reverse_iterator<iterator>;
+	typedef std::reverse_iterator<iterator> reverse_iterator;
 
 	/**
 	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order, but not change the elements.
-	* A const reverse iterator based on const iterator.
+	* A const reverse iterator based on const_iterator.
 	*/
-	typedef const_reverse_iterator std::reverse_iterator<const_iterator>;
+	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	/**
 	* \brief A signed integer type usually ptrdiff_t.
 	*/
-	typedef difference_type std::iterator_traits<iterator>::difference_type;
+	typedef std::iterator_traits<iterator>::difference_type difference_type;
 
 	/**
 	* \brief An unsigned integer type that can represent any non-negative value of difference_type, usually size_t.
 	*/
-	typedef size_type std::iterator_traits<iterator>::size_type;
+	typedef std::iterator_traits<iterator>::size_type size_type;
 
 	//constructors
 	/**
@@ -160,12 +164,13 @@ public:
 		//nothing to do. There is no memory to deallocate.
 	}
 
-	//Assignment Pperators
+	//Assignment Operators
 
 	/**
 	* \brief Copy Assignment
 	* Copies all the elements from bvl into the container (with bvl preserving its contents)
 	* \param[in] bvl BinaryVectorList to copy elements from.
+	* \return Reference to this (BinaryVectorList). This allows for function chaining.
 	*/
 	BinaryVectorList& operator= (const BinaryVectorList& bvl)
 	{
@@ -177,6 +182,7 @@ public:
 	* \brief Move Assignment
 	* Moves the elements of bvl into the container (bvl is left in an unspecified but valid state)
 	* \param[in] bvl BinaryVectorList to copy elements from.
+	* \return Reference to this (BinaryVectorList). This allows for function chaining.
 	*/
 	BinaryVectorList& operator= (BinaryVectorList&& bvl)
 	{
@@ -188,6 +194,7 @@ public:
 	* \brief Initializer List Assignment
 	* Copies the elements of il into the container.
 	* \param[in] il Initializer List to copy elements from.
+	* \return Reference to this (BinaryVectorList). This allows for function chaining.
 	*/
 	BinaryVectorList& operator= (std::initializer_list<value_type> il)
 	{
@@ -197,143 +204,282 @@ public:
 
 	//Iterators
 
-	iterator begin()
+	/**
+	* \brief Return iterator to beginning
+	* Returns an iterator pointing to the first element in the BinaryVectorList.
+	* \return An iterator pointing to the first element of the BinaryVectorList
+	*/
+	iterator begin() noexcept
 	{
 		return m_vTvector.begin();
 	}
 
-	const_iterator begin() const
+	/**
+	* \brief Return const iterator to beginning
+	* Returns a const_iterator pointing to the first element in the BinaryVectorList.
+	* \return A const_iterator pointing to the first element of the BinaryVectorList
+	*/
+	const_iterator begin() const noexcept
 	{
 		return m_vTvector.begin();
 	}
 
-	iterator end()
+	/**
+	* \brief Return iterator to end
+	* Returns an iterator pointing to the past-the-end element in the BinaryVectorList.
+	* \return An iterator pointing to the past-the-end element of the BinaryVectorList
+	*/
+	iterator end() noexcept
 	{
-
+		return m_vTvector.end();
 	}
 
-	const_iterator end() const
+	/**
+	* \brief Return const iterator to end
+	* Returns a const_iterator pointing to the past-the-end element in the BinaryVectorList.
+	* \return A const_iterator pointing to the past-the-end element of the BinaryVectorList
+	*/
+	const_iterator end() const noexcept
 	{
-
+		return m_vTvector.end();
 	}
 
-	reverse_iterator rbegin()
+	/**
+	* \brief Return reverse iterator to the reverse beginning
+	* Returns a reverse_iterator pointing to the last element in the BinaryVectorList.
+	* \return A reverse_iterator pointing to the last element of the BinaryVectorList
+	*/
+	reverse_iterator rbegin() noexcept
 	{
-
+		return m_vTvector.rbegin();
 	}
 
-	const_reverse_iterator rbegin() const
+	/**
+	* \brief Return const reverse iterator to the reverse beginning
+	* Returns a const_reverse_iterator pointing to the last element in the BinaryVectorList.
+	* \return A const_reverse_iterator pointing to the last element of the BinaryVectorList
+	*/
+	const_reverse_iterator rbegin() const noexcept
 	{
-
+		return m_vTvector.rbegin();
 	}
 
-	reverse_iterator rend()
+	/**
+	* \brief Return reverse iterator to the reverse end
+	* Returns a reverse_iterator pointing to the theoretical element preceding the first element in the BinaryVectorList.
+	* \return A reverse_iterator pointing to the theoretical element preceding the first element of the BinaryVectorList
+	*/
+	reverse_iterator rend() noexcept
 	{
-
+		return m_vTvector.rend();
 	}
 
-	const_reverse_iterator rend() const
+	/**
+	* \brief Return const reverse iterator to the reverse end
+	* Returns a const_reverse_iterator pointing to the theoretical element preceding the first element in the BinaryVectorList.
+	* \return A const_reverse_iterator pointing to the theoretical element preceding the first element of the BinaryVectorList
+	*/
+	const_reverse_iterator rend() const noexcept
 	{
-
+		return m_vTvector.rend();
 	}
 
+	/**
+	* \brief Return const_iterator to beginning
+	* Returns a const_iterator pointing to the first element in the BinaryVectorList.
+	* \return A const_iterator pointing to the first element of the BinaryVectorList
+	*/
 	const_iterator cbegin() const noexcept
 	{
-
+		return m_vTvector.cbegin();
 	}
 
-	const_iterator Cend() const noexcept
+	/**
+	* \brief Return const_iterator to end
+	* Returns a const_iterator pointing to the past-the-end element in the BinaryVectorList.
+	* \return A const_iterator pointing to the past-the-end element of the BinaryVectorList
+	*/
+	const_iterator cend() const noexcept
 	{
-
+		return m_vTvector.cend();
 	}
 
+	/**
+	* \brief Return const_reverse_iterator to the reverse beginning
+	* Returns a const_reverse_iterator pointing to the last element in the BinaryVectorList.
+	* \return A const_reverse_iterator pointing to the last element of the BinaryVectorList
+	*/
 	const_reverse_iterator crbegin() const noexcept
 	{
-
+		return m_vTvector.crbegin();
 	}
 
+	/**
+	* \brief Return const_reverse_iterator to the reverse end
+	* Returns a const_reverse_iterator pointing to the theoretical element preceding the first element in the BinaryVectorList.
+	* \return A const_reverse_iterator pointing to the theoretical element preceding the first element of the BinaryVectorList
+	*/
 	const_reverse_iterator crend() const noexcept
 	{
-
+		return m_vTvector.crend();
 	}
 
 	//Capacity
 
-	size_type size() const
+	/**
+	* \brief Return size of BinaryVectorList
+	* Returns the number of elements in the BinaryVectorList.
+	* \return The number of elements in the BinaryVectorList.
+	*/
+	size_type size() const noexcept
 	{
-
+		return m_vTvector.size();
 	}
 
-	size_type max_size() const
+	/**
+	* \brief Return maximum size of BinaryVectorList
+	* Returns the maximum number of elements the BinaryVectorList can hold.
+	* \return The maximum number of elements the BinaryVectorList can hold.
+	*/
+	size_type max_size() const noexcept
 	{
-
+		return m_vTvector.max_size();
 	}
 
-	void resize(size_type n, value_type val = value_type())
+	/**
+	* \brief Change size
+	* Resizes the BinaryVectorList so that it contains n elements.
+	* \param[in] n		Number of elements to resize the BinaryVectorList to.
+	* \param[in] val	Value to fill added elements with if n is greater than the current BinaryVectorList size.
+	*/
+	void resize(size_type n, const value_type val = value_type())
 	{
-
+		m_vTvector.resize(n, val);
 	}
 
-	size_type capacity() const
+	/**
+	* \brief Return size of currently allocated storage capacity
+	* Returns the size of the storage space currently allocated for the BinaryVectorElement, expressed in terms of value_type elements.
+	* \return The size of the storage space currently allocated for the BinaryVectorElement, expressed in terms of value_type elements.
+	*/
+	size_type capacity() const noexcept
 	{
-
+		return m_vTvector.capacity();
 	}
 
-	bool empty() const
+	/**
+	* \brief Test whether the BinaryVectorList is empty
+	* Returns whether the BinaryVectorList's size is 0.
+	* \return Whether the size is 0
+	*/
+	bool empty() const noexcept
 	{
-
+		return m_vTvector.empty();
 	}
 
+	/**
+	* \brief Request a change in capacity
+	* Requests that the BinaryVectorList capacity be enough to contain at least n elements.
+	* \param[in] n Minimum number of elements the BinaryVectorList should contain
+	*/
 	void reserve(size_type n)
 	{
-
+		m_vTvector.reserve(n);
 	}
 
+	/**
+	* \brief Request a down-size of capacity
+	* Requests the BinaryVectorList shrink to a capacity that matches it current size
+	*/
 	void shrink_to_fit()
 	{
-
+		m_vTvector.shrink_to_fit();
 	}
 
 	//Element Access
 
-	value_type& operator[] (size_type n)
+	/**
+	* \brief Access element
+	* Returns a reference to the element at position n in the BinaryVectorList.
+	* \param[in] n position of the desired element.
+	* \return A reference to the element at position n
+	*/
+	reference operator[] (size_type n)
 	{
-
+		return m_vTvector[n];
 	}
 
-	const value_type& operator[] (size_type n) const
+	/**
+	* \brief Access element
+	* Returns a const_reference to the element at position n in the BinaryVectorList.
+	* \param[in] n position of the desired element.
+	* \return A const_reference to the element at position n
+	*/
+	const_reference operator[] (size_type n) const
 	{
-
+		return m_vTvector[n];
 	}
 
-	value_type& at(size_type n)
+	/**
+	* \brief Access element
+	* Returns a reference to the element at position n in the BinaryVectorList.
+	* \param[in] n position of the desired element.
+	* \return A reference to the element at position n
+	*/
+	reference at(size_type n)
 	{
-
+		return m_vTvector.at(n);
 	}
 
-	const value_type& at(size_type n) const
+	/**
+	* \brief Access element
+	* Returns a const_reference to the element at position n in the BinaryVectorList.
+	* \param[in] n position of the desired element.
+	* \return A const_reference to the element at position n
+	*/
+	const_reference at(size_type n) const
 	{
-
+		return m_vTvector.at(n);
 	}
 
-	value_type& front()
+	/**
+	* \brief Access first element
+	* Returns a reference to the first element in the BinaryVectorList.
+	* \return A reference to the first element in the BinaryVectorList.
+	*/
+	reference front()
 	{
-
+		return m_vTvector.front();
 	}
 
-	const value_type& front() const
+	/**
+	* \brief Access first element
+	* Returns a const_reference to the first element in the BinaryVectorList.
+	* \return A const_reference to the first element in the BinaryVectorList.
+	*/
+	const_reference front() const
 	{
-
+		return m_vTvector.front();
 	}
 
-	value_type& back()
+	/**
+	* \brief Access last element
+	* Returns a reference to the last element in the BinaryVectorList.
+	* \return A reference to the last element in the BinaryVectorList.
+	*/
+	reference back()
 	{
-
+		return m_vTvector.back();
 	}
 
-	const value_type& back() const
+	/**
+	* \brief Access last element
+	* Returns a const_reference to the last element in the BinaryVectorList.
+	* \return A const_reference to the last element in the BinaryVectorList.
+	*/
+	const_reference back() const
 	{
-
+		return m_vTvector.back();
 	}
 
 	//Modifiers
