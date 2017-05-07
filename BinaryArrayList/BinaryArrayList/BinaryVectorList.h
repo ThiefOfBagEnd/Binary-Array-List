@@ -502,7 +502,7 @@ public:
 
 	void push_front(const value_type& val)
 	{
-
+		m_vTvector.insert(m_vTvector.begin(), val);
 	}
 
 	void pop_back()
@@ -512,7 +512,7 @@ public:
 
 	void pop_front()
 	{
-
+		m_vTvector.erase(m_vTvector.begin());
 	}
 
 	iterator insert(iterator position, const value_type& val)
@@ -570,6 +570,8 @@ public:
 	}
 
 	//Operations - Most of these will be slow since they are taken from STL List, but still worth implementing.
+	/*
+	* Not implementing these on the first pass. There's no vector implementation for these.
 
 	void splice(iterator position, BinaryVectorList& x)
 	{
@@ -634,6 +636,7 @@ public:
 	{
 
 	}
+	*/
 
 protected:
 	//std::vector<std::vector<value_type> > m_vvTvectorList;
