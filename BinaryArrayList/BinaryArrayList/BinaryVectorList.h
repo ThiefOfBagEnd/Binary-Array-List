@@ -146,7 +146,7 @@ public:
 	/**
 	* \brief Initializer List Constructor
 	* Constructs a container with a copy of each of the elements in il, in the same order.
-	* \param[in] il Initializer List to copy elements from.
+	* \param[in] il		Initializer List to copy elements from.
 	* \param[in] alloc	Allocator to use for the BinaryVectorList.
 	*/
 	BinaryVectorList(std::initializer_list<value_type> il, const allocator_type& alloc = allocator_type())
@@ -401,7 +401,7 @@ public:
 	/**
 	* \brief Access element
 	* Returns a reference to the element at position n in the BinaryVectorList.
-	* \param[in] n position of the desired element.
+	* \param[in] n Position of the desired element.
 	* \return A reference to the element at position n
 	*/
 	reference operator[] (size_type n)
@@ -423,7 +423,7 @@ public:
 	/**
 	* \brief Access element
 	* Returns a reference to the element at position n in the BinaryVectorList.
-	* \param[in] n position of the desired element.
+	* \param[in] n Position of the desired element.
 	* \return A reference to the element at position n
 	*/
 	reference at(size_type n)
@@ -434,7 +434,7 @@ public:
 	/**
 	* \brief Access element
 	* Returns a const_reference to the element at position n in the BinaryVectorList.
-	* \param[in] n position of the desired element.
+	* \param[in] n Position of the desired element.
 	* \return A const_reference to the element at position n
 	*/
 	const_reference at(size_type n) const
@@ -483,60 +483,166 @@ public:
 	}
 
 	//Modifiers
-
+	/**
+	* \brief Assign BinaryVectorList content from another container
+	* Assigns new content to the BinaryVectorList, replacing its current contents with copies from the elements in [first,last), and modifying it's size accordingly.
+	* \param[in] first	InputIterator to the initial position in the container to be copied from
+	* \param[in] last	InputIterator to the final position in the container to be copied from
+	*/
 	template <typename InputIterator>
 	void assign(InputIterator first, InputIterator last)
 	{
-
+		m_vTvector.assign(first, last);
 	}
 
+	/**
+	* \brief Assign BinaryVectorList content with copies of a value
+	* Assigns new content to the BinaryVectorList, replacing its current contents with n copies of val, and modifying it's size accordingly.
+	* \param[in] n		New size for the BinaryVectorList
+	* \param[in] val	Value to fill the container with
+	*/
 	void assign(size_type n, const value_type& val)
 	{
-
+		m_vTvector.assign(n, val);
 	}
 
+	/**
+	* \brief Assign BinaryVectorList content from an initializer_list
+	* Assigns new content to the BinaryVectorList, replacing its current contents with the values from the initializer_list, and modifying it's size accordingly.
+	* \param[in] il Initializer List to copy elements from.
+	*/
+	void assign(std::initializer_list<value_type> il)
+	{
+		m_vTvector.assign(il);
+	}
+
+	/**
+	* \brief Add an element at the end of the BinaryVectorList
+	* Adds a new element at the end of the BinaryVectorList. The content of val is copied to the new element
+	* \param[in] val Value to be copied to the new element
+	*/
 	void push_back(const value_type& val)
 	{
-
+		m_vTvector.push_back(val);
 	}
 
+	/**
+	* \brief Add an element at the end of the BinaryVectorList
+	* Adds a new element at the end of the BinaryVectorList. The content of val is moved to the new element
+	* \param[in] val Value to be moved to the new element
+	*/
+	void push_back(value_type&& val)
+	{
+		m_vTvector.push_back(val);
+	}
+
+	/**
+	* \brief Add an element at the beginning of the BinaryVectorList
+	* Adds a new element at the beginning of the BinaryVectorList. The content of val is copied to the new element
+	* \param[in] val Value to be copied to the new element
+	*/
 	void push_front(const value_type& val)
 	{
 		m_vTvector.insert(m_vTvector.begin(), val);
 	}
 
-	void pop_back()
+	/**
+	* \brief Add an element at the beginning of the BinaryVectorList
+	* Adds a new element at the beginning of the BinaryVectorList. The content of val is moved to the new element
+	* \param[in] val Value to be moved to the new element
+	*/
+	void push_front(value_type&& val)
 	{
-
+		m_vTvector.insert(m_vTvector.begin(), val);
 	}
 
+	/**
+	* \brief Deletes the last element of the BinaryVectorList
+	* Removes the last element in the BinaryVectorList, effectively reducing the container size by 1.
+	*/
+	void pop_back()
+	{
+		m_vTvector.pop_back();
+	}
+
+	/**
+	* \brief Deletes the first element of the BinaryVectorList
+	* Removes the first element in the BinaryVectorList, effectively reducing the container size by 1.
+	*/
 	void pop_front()
 	{
 		m_vTvector.erase(m_vTvector.begin());
 	}
 
-	iterator insert(iterator position, const value_type& val)
+	/**
+	* \brief Insert a copy of 1 element
+	* The BinaryVectorList is extended by inserting a copy of val before the element at the specified position.
+	* \param[in] position	The position where the new elements are to be inserted
+	* \param[in] val		The value be copied
+	* \return An iterator that points to the newly inserted element
+	*/
+	iterator insert(const_iterator position, const value_type& val)
 	{
-
+		m_vTvector.insert(position, val);
 	}
 
-	void insert(iterator position, size_type n, const value_type& val)
+	/**
+	* \brief Insert n copies of 1 element
+	* The BinaryVectorList is extended by inserting n copies of val before the element at the specified position.
+	* \param[in] position	The position where the new elements are to be inserted
+	* \param[in] n			The number of elements to insert
+	* \param[in] val		The value be copied
+	* \return An iterator that points to the first newly inserted element
+	*/
+	iterator insert(const_iterator position, size_type n, const value_type& val)
 	{
-
+		m_vTvector.insert(position, n, val);
 	}
 
+	/**
+	* \brief Insert elements from an InputIterator
+	* The BinaryVectorList is extended by inserting copies of elements from the range [first, last) before the element at the specified position.
+	* \param[in] position	The position where the new elements are to be inserted
+	* \param[in] first		InputIterator specifying the initial position in a container to copy from
+	* \param[in] last		InputIterator specifying the final position in a container to copy from
+	* \return An iterator that points to the first newly inserted element
+	*/
 	template<typename InputIterator>
-	void insert(iterator position, InputIterator first, InputIterator last)
+	iterator insert(const_iterator position, InputIterator first, InputIterator last)
+	{
+		m_vTvector.insert(position, first, last);
+	}
+
+	/**
+	* \brief Insert a moved element
+	* The BinaryVectorList is extended by inserting val before the element at the specified position. val is moved from it's old container
+	* \param[in] position	The position where the new elements are to be inserted
+	* \param[in] val		The value be moved
+	* \return An iterator that points to the newly inserted element
+	*/
+	iterator insert(const_iterator position, value_type&& val)
+	{
+		m_vTvector.insert(position, val);
+	}
+
+	/**
+	* \brief Insert elements from an initializer_list
+	* The BinaryVectorList is extended by inserting copies of elements from the initializer_list before the element at the specified position.
+	* \param[in] position	The position where the new elements are to be inserted
+	* \param[in] il			Initializer_list to copy from
+	* \return An iterator that points to the newly inserted element
+	*/
+	iterator insert(const_iterator position, std::initializer_list<value_type> il)
+	{
+		m_vTvector.insert(position, il);
+	}
+
+	iterator erase(const_iterator position)
 	{
 
 	}
 
-	iterator erase(iterator position)
-	{
-
-	}
-
-	iterator erase(iterator first, iterator last)
+	iterator erase(const_iterator first, iterator last)
 	{
 
 	}
