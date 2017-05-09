@@ -1,21 +1,39 @@
 /** \file BinaryVectorList.h
 * \brief BinaryVectorList Header File
-* Last Update: 5/6/17 9:54AM
-* Author: Taylor Dowlen
+* \date 5/7/17
+* \version 0.0.1
+* \author Taylor Dowlen
+* \copyright GNU General Public License v3.0
+* \warning THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
 
 #include <vector>
 
-/** \class BinaryVectorList
-* \brief A v-list implementation the array data type/vector STL container.
-* It's API matches std::vector almost perfectly.
-* It should be asymptotically faster on inserts and deletes, but uses less spacial locality than std::vector
-*/
-
-/** \typedef value_type
-* \brief The type of elements in the BinaryVectorList container.
+/**
+* \brief A v-list implementation the array abstract data structure.
+* It's API is a combination of those of std::vector and std::list with a few exceptions.
+* Anything asymptotically slower than linear with respect to container size from the std::list API is not provided.
+* This is a way from keeping users from doing stupid (slow) things, and blaming the data structure.
+* std::vector.data() is not provided because it wholly is dependent on the underlying implementation of std::vector.
+* The goal here is to use an implementation free interface to develop a new implementation for the array abstract data structure, 
+* that is the implementation details can vary from each individual implementor, but the API/interface remain the same. 
+* data() doesn't fit that goal, it assumes that std::vector is implemented as 1 continuous block of memory,
+* which this implementation will intentionally break.
+* BinaryVectorList can be used exactly like std::vector (except for std::vector.data()) 
+* including having constant time Random Access Iterators, leveraging some spacial locality of elements, 
+* but it should be asymptotically faster on inserts at the end than std::vector.
+* The downside is that it uses less spacial locality than std::vector
+* by using several different sized blocks of continuous memory instead of just 1.
+* \tparam allocator_type The type of allocator to use in the BinaryVectorList container.
+* \tparam value_type The type of elements in the BinaryVectorList container.
 */
 template<typename value_type, typename allocator_type = std::allocator<value_type> >
 class BinaryVectorList
@@ -25,63 +43,62 @@ public:
 	{
 		return;
 	}
-	//typedefs
+	//Typedefs
 
 	/**
-	* \brief A reference to value_type
+	* A reference to value_type
 	*/
 	typedef value_type& reference;
 
 	/**
-	* \brief A const reference to value_type
+	* A const reference to value_type
 	*/
 	typedef const reference const_reference;
 
 	/**
-	* \brief A pointer to value_type given by allocator (usually value_type*)
+	* A pointer to value_type given by allocator (usually value_type*)
 	*/
 	typedef std::allocator_traits<allocator_type>::pointer pointer;
 
 	/**
-	* \brief A const pointer to value_type given by allocator (usually const value_type*)
+	* A const pointer to value_type given by allocator (usually const value_type*)
 	*/
 	typedef std::allocator_traits<allocator_type>::const_pointer const_pointer;
 
 	/**
-	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList.
-	* Not sure what type we need here yet. Probably std::vector::iterator, but until implementation is concluded we won't know.
+	* An iterator type that can be used to iterate through the elements of a BinaryVectorList.
 	*/
+	//Not sure what type we need here yet. Probably std::vector::iterator, but until implementation is concluded we won't know.
 	typedef std::vector<value_type>::iterator iterator;
 
 	/**
-	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList, but not change the elements.
-	* Not sure what type we need here yet. Probably std::vector::const_iterator, but until implementation is concluded we won't know.
+	* An iterator type that can be used to iterate through the elements of a BinaryVectorList, but not change the elements. 
 	*/
+	// Not sure what type we need here yet.Probably std::vector::const_iterator, but until implementation is concluded we won't know.
 	typedef std::vector<value_type>::const_iterator const_iterator;
 
 	/**
-	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order.
-	* A reverse iterator based on iterator.
+	* An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order.
 	*/
 	typedef std::reverse_iterator<iterator> reverse_iterator;
 
 	/**
-	* \brief An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order, but not change the elements.
-	* A const reverse iterator based on const_iterator.
+	* An iterator type that can be used to iterate through the elements of a BinaryVectorList in reverse order, but not change the elements.
 	*/
 	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	/**
-	* \brief A signed integer type usually ptrdiff_t.
+	* A signed integer type, usually ptrdiff_t.
 	*/
 	typedef std::iterator_traits<iterator>::difference_type difference_type;
 
 	/**
-	* \brief An unsigned integer type that can represent any non-negative value of difference_type, usually size_t.
+	* An unsigned integer type that can represent any non-negative value of difference_type, usually size_t.
 	*/
 	typedef std::iterator_traits<iterator>::size_type size_type;
 
-	//constructors
+	//Constructors
+
 	/**
 	* \brief Empty Container Constructor
 	* Constructs an empty container with no elements.
@@ -106,8 +123,9 @@ public:
 
 	/**
 	* \brief Range Constructor
-	* Constructs a container with as many elements as the range [first,last), 
+	* Constructs a container with as many elements as the range [first,last),
 	* with each element constructed from its corresponding element in that range, in the same order.
+	* \tparam InputIterator The iterator type to a container whose elements are to be copied to the BinaryVectorList
 	* \param[in] first	Iterator to the first element in the container whose elements are to be copied into the BinaryVectorList.
 	* \param[in] last	Iterator to the last element in the container whose elements are to copied into the BinaryVectorList. NOTE: The last element is not copied into the BinaryVectorList.
 	* \param[in] alloc	Allocator to use for the BinaryVectorList.
@@ -154,7 +172,8 @@ public:
 		m_vTvector(il, alloc);
 	}
 
-	//destructor
+	//Destructor
+
 	/**
 	* \brief Destructor
 	* Deallocates all of the memory used by the BinaryVectorList
@@ -483,9 +502,11 @@ public:
 	}
 
 	//Modifiers
+
 	/**
 	* \brief Assign BinaryVectorList content from another container
 	* Assigns new content to the BinaryVectorList, replacing its current contents with copies from the elements in [first,last), and modifying it's size accordingly.
+	* \tparam InputIterator The iterator type to a container whose elements are to be copied to the BinaryVectorList
 	* \param[in] first	InputIterator to the initial position in the container to be copied from
 	* \param[in] last	InputIterator to the final position in the container to be copied from
 	*/
@@ -583,7 +604,7 @@ public:
 	*/
 	iterator insert(const_iterator position, const value_type& val)
 	{
-		m_vTvector.insert(position, val);
+		return m_vTvector.insert(position, val);
 	}
 
 	/**
@@ -596,12 +617,13 @@ public:
 	*/
 	iterator insert(const_iterator position, size_type n, const value_type& val)
 	{
-		m_vTvector.insert(position, n, val);
+		return m_vTvector.insert(position, n, val);
 	}
 
 	/**
 	* \brief Insert elements from an InputIterator
 	* The BinaryVectorList is extended by inserting copies of elements from the range [first, last) before the element at the specified position.
+	* \tparam InputIterator The iterator type to a container whose elements are to be copied to the BinaryVectorList
 	* \param[in] position	The position where the new elements are to be inserted
 	* \param[in] first		InputIterator specifying the initial position in a container to copy from
 	* \param[in] last		InputIterator specifying the final position in a container to copy from
@@ -610,7 +632,7 @@ public:
 	template<typename InputIterator>
 	iterator insert(const_iterator position, InputIterator first, InputIterator last)
 	{
-		m_vTvector.insert(position, first, last);
+		return m_vTvector.insert(position, first, last);
 	}
 
 	/**
@@ -622,7 +644,7 @@ public:
 	*/
 	iterator insert(const_iterator position, value_type&& val)
 	{
-		m_vTvector.insert(position, val);
+		return m_vTvector.insert(position, val);
 	}
 
 	/**
@@ -634,42 +656,85 @@ public:
 	*/
 	iterator insert(const_iterator position, std::initializer_list<value_type> il)
 	{
-		m_vTvector.insert(position, il);
+		return m_vTvector.insert(position, il);
 	}
 
+	/**
+	* \brief Erase an element
+	* Removes a single element from the binary
+	* \param[in] position The position of the element to be remove
+	* \return An iterator that points to the new location of the element that was after the erased element.
+	*/
 	iterator erase(const_iterator position)
 	{
-
+		return m_vTvector.erase(position);
 	}
 
+	/**
+	* \brief Erase a range of elements
+	* Removes the elements in the range [first,last)
+	* \param[in] first	The position of the first element to remove
+	* \param[in] last	The position after the last element to remove
+	* \return An iterator that points to the new location of the element that was after the last erased element.
+	*/
 	iterator erase(const_iterator first, iterator last)
 	{
-
+		return m_vTvector.erase(first, last);
 	}
 
-	void swap(BinaryVectorList& x)
+	/**
+	* \brief Swap BinaryVectorList content
+	* Exchanges the content of the BinaryVectorList by the content of another BinaryVectorList, bvl.
+	* \param[in] bvl The BinaryVectorList to swap contents with
+	*/
+	void swap(BinaryVectorList& bvl)
 	{
-
+		m_vTvector.swap(bvl.m_vTvector);
 	}
 
-	void clear()
+	/**
+	* \brief Empty BinaryVectorList contents
+	* Removes all elements from the BinaryVectorList, leaving the container with a size of 0.
+	*/
+	void clear() noexcept
 	{
-
+		m_vTvector.clear();
 	}
 
+	/**
+	* \brief Construct and insert an element
+	* The container is extended by inserting a new element constructed in place (using args as the arguments for its constructor) at position.
+	* \tparam Args The arguments to the constructor for the element being emplaced
+	* \param[in] position	The position to add the new element
+	* \param[in] args		The arguments to the constructor to build the new element
+	* \return An iterator that points to the new element
+	*/
 	template<typename... Args>
 	iterator emplace(const_iterator position, Args&&... args)
 	{
-		m_vTvector.emplace(position, args);
+		return m_vTvector.emplace(position, args);
 	}
 
+	/**
+	* \brief Construct and insert an element at the end of the BinaryVector list
+	* The container is extended by inserting a new element constructed in place (using args as the arguments for its constructor) at the end of the BinaryVectorList.
+	* \tparam Args The arguments to the constructor for the element being emplaced
+	* \param[in] args		The arguments to the constructor to build the new element
+	* \return An iterator that points to the new element
+	*/
 	template<typename... Args>
-	iterator emplace_back(Args&&... args)
+	void emplace_back(Args&&... args)
 	{
 		m_vTvector.emplace_back(args);
 	}
 
 	//Allocator
+
+	/**
+	* \brief Get allocator object
+	* Returns a copy of the allocator object associated with the BinaryVectorList.
+	* \return A copy of the allocator object associated with the BinaryVectorList.
+	*/
 	allocator_type get_allocator() const noexcept
 	{
 		return m_vTvector.get_allocator();
@@ -750,6 +815,13 @@ protected:
 };
 
 //Swap two BinaryVectorLists
+
+/**
+* \brief Exchange content of vectors
+* The contents of bvlLeft are exchanged for those of bvlRight
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 void swap(BinaryVectorList<value_type, allocator_type>& bvlLeft, BinaryVectorList<value_type, allocator_type>& bvlRight)
 {
@@ -757,38 +829,121 @@ void swap(BinaryVectorList<value_type, allocator_type>& bvlLeft, BinaryVectorLis
 }
 
 //Relational Operators
+
+/**
+* \brief Equality comparison
+* Compares sizes and if they match the elements are compared sequentially using operator ==, stopping at the first mismatch
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator == (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	bool bResult = false;
+	if (lhs.size() == rhs.size())
+	{
+		bResult = true;
+		BinaryVectorList<value_type, allocator_type>::size_type size = lhs.size();
+		size_t i = 0;
+		for (i = 0; i < size; ++i)
+		{
+			if (lhs[i] == rhs[i])
+			{
+				continue;
+			}
+			else
+			{
+				bResult = false;
+				break;
+			}
+		}
+	}
+	return bResult;
 }
 
+/**
+* \brief Inequality comparison
+* Negation of the equality comparison
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator != (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	return !(lhs == rhs);
 }
 
+/**
+* \brief Lexicographical less than comparison
+* The elements are compared sequentially using operator < (a<b and b<a) and stopping at the first occurrence of inequality.
+* If a (lhs) < b (rhs) for some a and b, then lhs < rhs.
+* If b (rhs) < a (lhs) for some a and b,then rhs < lhs.
+* If sequential comparisons are equal, then the BinaryVectorList with the smallest size is said to be less than the other.
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator < (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	bool bResult = false;
+	BinaryVectorList<value_type, allocator_type>::size_type lhsize = lhs.size();
+	BinaryVectorList<value_type, allocator_type>::size_type rhsize = rhs.size();
+	size_t i = 0;
+	for (i = 0; (i < lhsize) && (i < rhsize); ++i)
+	{
+		if (lhs[i] < rhs[i])
+		{
+			//lhs < rhs
+			bResult = true;
+			break;
+		}
+		if (rhs[i] < lhs[i])
+		{
+			//rhs < lhs
+			bResult = false;
+			break;
+		}
+	}
+	if ((i == lhsize) || (i == rhsize))
+	{
+		//we made it all the way through one of the lists with "equality"
+		bResult = lhssize < rhsize;
+	}
+	return bResult;
 }
 
+/**
+* \brief Less than or equal lexicographical comparison
+* Negation of the greater than comparison
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator <= (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	return !(rhs < lhs)
 }
 
+/**
+* \brief Greater than lexicographical comparison
+* Less than comparison with the arguments swapped
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator > (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	return rhs < lhs;
 }
 
+/**
+* \brief Greater than or equal lexicographical comparison
+* Negation of the less than comparison
+* \tparam value_type The type of elements in the BinaryVectorLists.
+* \tparam allocator_type The type of allocator used in the BinaryVectorLists.
+*/
 template<typename value_type, typename allocator_type>
 bool operator >= (const BinaryVectorList<value_type, allocator_type>& lhs, const BinaryVectorList<value_type, allocator_type>& rhs)
 {
-	return true;
+	return !(lhs < rhs);
 }
