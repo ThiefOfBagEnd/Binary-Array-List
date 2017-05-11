@@ -39,10 +39,6 @@ template<typename value_type, typename allocator_type = std::allocator<value_typ
 class BinaryVectorList
 {
 public:
-	void functionhere()
-	{
-		return;
-	}
 	//Typedefs
 
 	/**
@@ -64,6 +60,12 @@ public:
 	* A const pointer to value_type given by allocator (usually const value_type*)
 	*/
 	typedef std::allocator_traits<allocator_type>::const_pointer const_pointer;
+
+	template<typename iterator_type>
+	class BinaryVectorListIterator : public std::iterator<std::random_access_iterator_tag, iterator_type>
+	{
+
+	};
 
 	/**
 	* An iterator type that can be used to iterate through the elements of a BinaryVectorList.
