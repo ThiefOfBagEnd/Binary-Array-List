@@ -64,7 +64,37 @@ public:
 	template<typename iterator_type>
 	class BinaryVectorListIterator : public std::iterator<std::random_access_iterator_tag, iterator_type>
 	{
+	public:
+		BinaryVectorListIterator() {}
+		BinaryVectorListIterator(iterator_type rhs) : iter(rhs) {}
+		BinaryVectorListIterator(const BinaryVectorListIterator &rhs) : iter(rhs.iter) {}
+		/* inline Iterator& operator=(Type* rhs) {_ptr = rhs; return *this;} */
+		/* inline Iterator& operator=(const Iterator &rhs) {_ptr = rhs._ptr; return *this;} */
+		inline BinaryVectorListIterator& operator+=(difference_type rhs) { _ptr += rhs; return *this; }
+		inline BinaryVectorListIterator& operator-=(difference_type rhs) { _ptr -= rhs; return *this; }
+		inline Type& operator*() const { return *_ptr; }
+		inline Type* operator->() const { return _ptr; }
+		inline Type& operator[](difference_type rhs) const { return _ptr[rhs]; }
 
+		inline BinaryVectorListIterator& operator++() { ++_ptr; return *this; }
+		inline BinaryVectorListIterator& operator--() { --_ptr; return *this; }
+		inline BinaryVectorListIterator operator++(int) const { Iterator tmp(*this); ++_ptr; return tmp; }
+		inline BinaryVectorListIterator operator--(int) const { Iterator tmp(*this); --_ptr; return tmp; }
+		/* inline Iterator operator+(const Iterator& rhs) {return Iterator(_ptr+rhs.ptr);} */
+		inline difference_type operator-(const BinaryVectorListIterator& rhs) const { return Iterator(_ptr - rhs.ptr); }
+		inline BinaryVectorListIterator operator+(difference_type rhs) const { return Iterator(_ptr + rhs); }
+		inline BinaryVectorListIterator operator-(difference_type rhs) const { return Iterator(_ptr - rhs); }
+		friend inline BinaryVectorListIterator operator+(difference_type lhs, const BinaryVectorListIterator& rhs) { return Iterator(lhs + rhs._ptr); }
+		friend inline BinaryVectorListIterator operator-(difference_type lhs, const BinaryVectorListIterator& rhs) { return Iterator(lhs - rhs._ptr); }
+
+		inline bool operator==(const BinaryVectorListIterator& rhs) const { return _ptr == rhs._ptr; }
+		inline bool operator!=(const BinaryVectorListIterator& rhs) const { return _ptr != rhs._ptr; }
+		inline bool operator>(const BinaryVectorListIterator& rhs) const { return _ptr > rhs._ptr; }
+		inline bool operator<(const BinaryVectorListIterator& rhs) const { return _ptr < rhs._ptr; }
+		inline bool operator>=(const BinaryVectorListIterator& rhs) const { return _ptr >= rhs._ptr; }
+		inline bool operator<=(const BinaryVectorListIterator& rhs) const { return _ptr <= rhs._ptr; }
+	private:
+		iterator_type iter;
 	};
 
 	/**
